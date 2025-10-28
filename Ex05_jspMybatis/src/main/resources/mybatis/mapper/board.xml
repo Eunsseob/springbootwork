@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.springboot.repository.BoardRepository">
+	<select id="list" resultType="com.study.springboot.domain.Board">
+		select *
+		from boardtest
+		order by boardno desc
+	</select>	
+	
+	<select id="totalRecord" resultType="_int">
+		select count(*)
+		from boardtest
+	</select>
+	
+	<select id="detailBoard" resultType="com.study.springboot.domain.Board">
+		select *
+		from boardTest
+		where boardno = #{boardno}
+	</select>
+	
+	<insert id="insertBoard">
+		 insert into boardTest
+		 values(SEQ_BOARDTEST.NEXTVAL, #{title}, #{writer}, #{content})
+	</insert>
+</mapper>
