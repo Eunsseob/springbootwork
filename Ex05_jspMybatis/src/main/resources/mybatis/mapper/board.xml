@@ -24,4 +24,9 @@
 		 insert into boardTest
 		 values(SEQ_BOARDTEST.NEXTVAL, #{title}, #{writer}, #{content})
 	</insert>
+	
+	<delete id="deleteBoard">
+		delete from boardTest
+		where boardno = #{boardno}
+	</delete>
 </mapper>

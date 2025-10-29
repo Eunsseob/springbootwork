@@ -6,8 +6,8 @@ import com.study.springboot.domain.Board;
 
 public interface BoardService {
 	public List<Board> list();
-	public Board detailBoard(String boardno);
+	public Board detailBoard(int boardno);
 	public int totalRecord();
 	public int insertBoard(Board b);
-	public int deleteBoard(String boardno);
+	public int deleteBoard(int boardno);
 }

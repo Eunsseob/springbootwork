@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.study.springboot.domain.Board;
 import com.study.springboot.service.BoardService;
@@ -82,7 +85,8 @@ public class BoardController {
 	@RequestMapping("/detail")
 	public String view(HttpServletRequest request, Model model) {
 		String sBoardno = request.getParameter("boardno");
-		model.addAttribute("detailBoard", boardService.detailBoard(sBoardno));
+	    int boardno = Integer.parseInt(sBoardno);
+		model.addAttribute("detailBoard", boardService.detailBoard(boardno));
 		return "detail";
 	}
 	
@@ -98,6 +102,14 @@ public class BoardController {
 		System.out.println(b.getContent());
 		model.addAttribute("insertBoard", boardService.insertBoard(b));
 		
+		return "redirect:list";
+	}
+	
+	@GetMapping("/delete")
+	public String delete(@RequestParam(value ="boardno") int boardno) {
+		int result = boardService.deleteBoard(boardno);
+		System.out.println(result);
+		// model.addAttribute("detailBoard", boardService.detailBoard(sBoardno));
 		return "redirect:list";
 	}
 }

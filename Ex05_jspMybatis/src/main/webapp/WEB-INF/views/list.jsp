@@ -27,7 +27,7 @@
 				<td>${b.boardno}</td>
 				<td><a href = "detail?boardno=${b.boardno}">${b.title}</a></td>
 				<td>${b.writer}</td>
-				<td><a href=""><button class="button">삭제하기</button></a></td>
+				<td><a href="delete?boardno=${b.boardno}"><button class="button">삭제하기</button></a></td>
 		</c:forEach>
 	</table>
 	<p><a href="writerForm"><button type="button">글쓰기</button></a></p>
