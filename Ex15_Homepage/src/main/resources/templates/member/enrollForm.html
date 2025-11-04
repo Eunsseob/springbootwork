@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="script.js"></script>
@@ -55,27 +56,27 @@
 <body>
 	<div th:replace="~{fragments/header.html::fragment-menu}"></div>
 	<h1>회원가입</h1>
-	<form name="ㅎ2" action="post" class="a">
+	<form method ="post" action="memberInsert" class="a" id="enrollForm" >
 		<table align="center">
 			<tr>
 				<th>아이디</th>
-				<th><input type="text" id="id" size="20" required></th>
+				<th><input type="text" id="id" name="id" size="20" required></th>
 			</tr>
 			<tr>
 				<th>비밀번호</th>
-				<th><input type="password" id="pwd" size="20" required></th>
+				<th><input type="password"  name="password" id="pwd" size="20" required></th>
 			</tr>
 			<tr>
 				<th>이름</th>
-				<th><input type="text" id="name" size="20" required></th>
+				<th><input type="text" id="name" name="name" size="20" required></th>
 			</tr>
 			<tr>
 				<th>이메일</th>
-				<th><input type="email" size="20" id="email"></th>
+				<th><input type="email" size="20" id="email" name="email"></th>
 			</tr>
 			<tr>
 				<th>생일</th>
-				<th><input type="date" id="birth"></th>
+				<th><input type="date" id="birth" name="birthday"></th>
 			</tr>
 			<tr>
 				<th>성별</th>
@@ -83,11 +84,11 @@
 			</tr>
 			<tr>
 				<th>휴대폰 번호</th>
-				<th><input type="text" id="phonenum" size="20"></th>
+				<th><input type="text" id="phonenum" size="20" name="phone"></th>
 			</tr>
 			<tr>
 				<th>우편번호</th>
-				<th><input name="zipcode" id="postcode" size="6" readonly>
+				<th><input id="postcode" size="6"  name="address" readonly>
 					<input type="button" value="우편번호 찾기" onClick="findAddr()">
 				</th>
 			</tr>
@@ -103,9 +104,41 @@
 			</tr>
 		</table>
 	</form>
+	
+	<script>
+		const $idInput = $("#id");
+		$idInput.keyup(function(){
+			if($idInput.val().length >= 5){
+				$.ajax({
+					url : "idCheck",
+					data : {id: $idInput.val()},
+					success : function(result){
+						console.log(result);
+						if(result){
+							$("#checkResult").show();
+							$("#checkResult").css("color", red)
+																.text("사용 못함 다시입력");
+							$("form[id='member/enrollForm']").attr("disabled", true);
+						} else {
+							$("#checkResult").show();
+							$("#checkResult").css("color", green)
+																.text("사용할 수 있는 아디입니다");
+							$("form[id='member/enrollForm']").attr("disabled", false);
+						}
+					},
+					error:function(){
+						console.log("아이디 체크용 ajax 통신 실패");
+					}
+				})
+			} else {
+				$("#checkResult").hide();
+				$("form[id='member/enrollForm']").attr("disabled", true);
+			}
+		})
+	</script>
 	<br><br>
 	<div align="center">
-		<img src="../../static/짱구1.jpg" class="img">
+		<img id="img1" src="/img/짱구1.jpg">
 	</div>
 </body>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{fragments/header.html::fragment-menu}"></div>
+	<h2 align="center">게 시 판</h2>
+	<table>
+		<thread>
+			<tr>
+				<th width="50">번호</th>
+				<th width="150">제목</th>
+				<th width="70">작성자</th>
+				<th width="50">조회수</th>
+				<th width="70">작성일</th>
+			</tr>
+		</thread>
+		<tbody>
+			<!-- 
+			th : each 구문에서 boardPage객체를 순회하게 되면
+			Thymeleaf가 내부적으로 boardPage.getContent()를 호출하여 content에 포함된 게시글 리스트를 반환함
+			 -->
+			<tr th:each="board, state: ${list}">
+				<td th:text="${boardPage.totalElements-boardPage.nowPage*boardPage.size-state.}"></td>
+				<td><a th:href="@{detailForm(bno=)}" th:text="${board.title}"></td>
+				<td th:text="${board.writer}"></td>
+				<td th:text="${board.count}"></td>
+				<td th:text="*{#temporals.format(board.createDate, 'yyyy-MM-dd')}"></td>			
+			</tr>
+		</tbody>
+	</table>
+		<div th:if="${loginUser != null}">
+			<a href="insertForm">글쓰기</a>
+		</div>
+	</div>
+</body>
+</html>
