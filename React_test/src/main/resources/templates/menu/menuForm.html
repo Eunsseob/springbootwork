@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="/webjars/jquery/3.7.1/jquery.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{ fragments/header.html :: fragment-menu }"></div>
+	<!-- 
+		GET /menu							: 전체 메뉴 조회
+		GET /menu/type/kr			: 한식 조회
+		GET /menu/type/ch			: 중식 조회
+		GET /menu/type/jp			: 일식 조회
+		GET /menu/taste/mild	: 순한맛 조회
+		GET /menu/taste/hot		: 매운맛 조회
+		GET /menu/taste/?? 		: 맛조회
+		
+		POST /menu						: 메뉴 한건 등록
+		
+		PUT /menu							: 메뉴 한건 전체수정
+		PATCH /menu					: 메뉴 한건 일부분만 수정
+		
+		DELETE /menu/10			: 메뉴 한건 삭제
+	 -->
+	 
+	 <div align="center">
+	 	<!-- 1. GET / menu : 전체 메뉴 조회 -->
+	 	<div>
+	 		<h3>전체메뉴</h3>
+	 		<button type="button" id="menuAllList">조회</button>
+	 	</div>
+	 	<div id="menu-result"></div>
+	 	<hr>
+	 	<script>
+	 		$("#menuAllList").on('click', () => {
+	 			$.ajax({
+	 				url: '/menu', // 전체 메뉴값 받아올수 있다.
+	 				success:function(result){
+	 					console.log(result);
+	 					menuTable("#menu-result", result);
+	 				},
+	 				error: function(error){
+	 				    console.log("에러");
+	 				}
+	 			})
+	 		})
+	 	</script>
+	 	<script type="text/javascript">
+	 		const menuTable = (selector, data) => {
+	 			const container = document.querySelector(selector);
+	 			let value = `<table id="list-area" align="center">
+	 										<thead>
+	 											<tr>
+	 												<th>번호</th>
+	 												<th>메뉴명</th>
+									 				<th>가격</th>
+									 				<th>가게</th>
+									 				<th>맛</th>
+									 				<th>타입</th>
+									 			</tr>
+									 		</thead>
+									 		<tbody>
+									 	`;
+						data.forEach(item => {
+							value += `<tr>
+													<td>${item.id}</td>
+													<td>${item.name}</td>
+													<td>${item.price}</td>
+													<td>${item.restaurant}</td>
+													<td>${item.taste}</td>
+													<td>${item.type}</td>
+												</tr>
+										`;
+						});
+						value += `</tbody></table>`;
+						container.innerHTML = value;
+	 		}
+	 	</script>
+	 	
+	 	<div>
+	 		<h3>메뉴 타입별 조회2</h3>
+	 		<select id="typeSelect">
+	 			<option value="" disabled selected></option>
+	 			<option value="KR">한식</option>
+	 			<option value="CH">중식</option>
+	 			<option value="JP">일식</option>
+	 		</select>
+			</div><br>
+			<div id="menuType-result"></div>
+			<hr>
+			<script>
+				$("#typeSelect").on('click', e =>{
+					console.log(e.target.value);
+					$.ajax({
+						url: `/menu/type/${e.target.value}`,
+						success:function(result){
+							console.log(result);
+							menuTable("#menuType-result", result);
+						},
+						error: function(error){
+		 				    console.log("에러");
+		 				}
+					})
+				})
+			</script> 		 
+	 	</div>
+	 	
+	 	<div align="center">
+	 		<h3>메뉴 타입별 조회3</h3>
+	 		<form name="typeTaste" id="typeTaste">
+		 			<input type="radio" name="type" value="KR">한식
+		 			<input type="radio" name="type" value="CH">중식
+		 			<input type="radio" name="type" value="JP">일식
+		 		&emsp;&emsp;<span></span>&emsp;&emsp;
+		 			<input type="radio" name="taste" value="MILD">순한맛
+		 			<input type="radio" name="taste" value="HOT">매운맛
+				<br>
+				
+				<button type="submit">조회하기</button>
+				</form>
+				<div id="typeTaste-result"></div>
+				<script>
+					$("#typeTaste").on('submit', e =>{
+						e.preventDefault();
+						const type = e.target.type.value;
+						const taste = e.target.taste.value;
+						console.log(type);
+						console.log(taste);
+						$.ajax({
+							url: `/menu/type/${type}/taste/${taste}`,
+							success (result){
+								menuTable("#typeTaste-result", result);
+							},
+							error : console.log
+						})
+					})
+				</script>
+				
+			</div>
+</body>
+</html>

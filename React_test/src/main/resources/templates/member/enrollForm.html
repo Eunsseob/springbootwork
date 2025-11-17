@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="script.js"></script>
+<script>
+    function findAddr(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+           	let roadAddr = data.roadAddress; // 도로명 주소
+            let jibunAddr = data.jibunAddress; // 지번 주소
+            let extraAddr = '';
+            
+            document.getElementById('postcode').value = data.zonecode;
+            // data.zonecode;
+            
+            if(data.userSelectedType == 'R'){
+            	// 사용자가 도로명을 선택하면
+            	if(data.bname != '')
+            		extraAddr += data.bname;
+            	if(data.buildingName != '')	
+            		extraAddr += ', ' + data.buildingName;
+            	
+            	roadAddr += extraAddr != '' ? '(' + extraAddr + ')' : '';
+            	document.getElementById('addr').value = roadAddr;
+            } else {
+            	// 지번을 선택했다면
+            	document.getElementById('addr').value = jibunAddr;
+            }
+            document.getElementById('detailAddr').focus();
+        }
+    }).open();
+    }
+</script>
+<style>
+	a {
+		text-align: center;
+		background-color: antiquewhite;
+		padding: auto;
+		width: 50%;
+		height: 70%;
+	}
+	.img{
+		width: 400px;
+		height: 400px;
+		text-align: center;
+		align : center;
+	}
+</style>
+<body>
+	<div th:replace="~{fragments/header.html::fragment-menu}"></div>
+	<h1>회원가입</h1>
+	<form method ="post" action="memberInsert" class="a" id="enrollForm" >
+		<table align="center">
+			<tr>
+				<th>아이디</th>
+				<th><input type="text" id="id" name="id" size="20" required></th>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<th><input type="password"  name="password" id="pwd" size="20" required></th>
+			</tr>
+			<tr>
+				<th>이름</th>
+				<th><input type="text" id="name" name="name" size="20" required></th>
+			</tr>
+			<tr>
+				<th>이메일</th>
+				<th><input type="email" size="20" id="email" name="email"></th>
+			</tr>
+			<tr>
+				<th>생일</th>
+				<th><input type="date" id="birth" name="birthday"></th>
+			</tr>
+			<tr>
+				<th>성별</th>
+				<th><input type="radio" name="gender" value="남">남 <input type="radio" name="gender"> 여 <input type="radio" name="gender"> 안알려줌</th>
+			</tr>
+			<tr>
+				<th>휴대폰 번호</th>
+				<th><input type="text" id="phonenum" size="20" name="phone"></th>
+			</tr>
+			<tr>
+				<th>우편번호</th>
+				<th><input id="postcode" size="6"  name="address" readonly>
+					<input type="button" value="우편번호 찾기" onClick="findAddr()">
+				</th>
+			</tr>
+			<tr>
+				<th>주소</th>
+				<td>
+					<input name="address" id="addr" size="20" readonly><br>
+					<input name="detail_address" id="detailAddr" placeholder="상세주소 넣기">
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2"><button type="reset">다시입력하기</button> &emsp;&emsp;<button type="submit">회원가입하기</button></th>
+			</tr>
+		</table>
+	</form>
+	
+	<script>
+		const $idInput = $("#id");
+		$idInput.keyup(function(){
+			if($idInput.val().length >= 5){
+				$.ajax({
+					url : "idCheck",
+					data : {id: $idInput.val()},
+					success : function(result){
+						console.log(result);
+						if(result){
+							$("#checkResult").show();
+							$("#checkResult").css("color", red)
+																.text("사용 못함 다시입력");
+							$("form[id='member/enrollForm']").attr("disabled", true);
+						} else {
+							$("#checkResult").show();
+							$("#checkResult").css("color", green)
+																.text("사용할 수 있는 아디입니다");
+							$("form[id='member/enrollForm']").attr("disabled", false);
+						}
+					},
+					error:function(){
+						console.log("아이디 체크용 ajax 통신 실패");
+					}
+				})
+			} else {
+				$("#checkResult").hide();
+				$("form[id='member/enrollForm']").attr("disabled", true);
+			}
+		})
+	</script>
+	<br><br>
+	<div align="center">
+		<img id="img1" src="/img/짱구1.jpg">
+	</div>
+</body>
+</html>

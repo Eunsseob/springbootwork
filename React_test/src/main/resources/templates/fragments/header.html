@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+	a {
+		text-decoration: none;
+		color: black;
+	}
+
+	.nav-area {
+		width: 100%;
+		background-color: rgb(74, 87, 51);
+		color: white;
+		text-align: center;
+		height: 50px;
+		
+		border-collapse: collapse;
+	    border-spacing: 0;
+	
+	    margin: 0;
+	    padding: 0;
+	}
+	.nav-area td {
+		width: 25%;
+	}
+	.nav-area td:hover {
+		background-color: rgb(133, 148, 107);
+		cursor: pointer;
+	}
+	.imgwrap {
+		text-align: center;
+		margin-top: 50px;
+	}
+
+	.img{
+		margin-top: 50px;
+		width: 400px;
+		height: 400px;
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+	<div th:fragment="fragment-menu">
+		<h1>스프링 홈페이지</h1>
+		<div th:if="${loginUser == null}" align="right">
+			<form action="login" method="post">
+				<table>
+					<tr>
+						<td>아이디</td>
+						<td><input name="id" required></td>
+						<td rowspan="2"><input type="submit" value="로그인" style="height:50px;"></td>
+					</tr>
+					<tr>
+						<td>비밀번호</td>
+						<td><input type="password" name="password" required></td>
+					</tr>
+					<tr>
+						<td colspan="3" align="center">
+							<a href="enrollForm">회원가입</a>&emsp;
+							<a href="">아이디/비밀번호찾기</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div th:if="${loginUser != null}" align="right">
+			<table>
+				<tr>
+					<td colspan="2">
+						<!--/*  thymeleaf의 주석 
+						<h3 th:text="${loginUser.name}">님 환영합니다</h3> ->  이름만 나옴
+						* 문자열 합치기 
+						<h3 th:text="${loginUser.name} + '님 환영합니다'"></h3> 
+						<h3 th:text="|${loginUser.name}님 환영합니다|"></h3>
+						*/-->
+						<h3>[[${loginUser.name}]]님 환영합니다</h3>  <!--/* [[문자로 인식]] */-->
+						<!--/* 
+						 	data 변수에 = <b>Hello</b> 들어있다면
+						 	[[${data}]]  -> <b>Hello</b>  -> <b>도 문자로 인식
+						 	[(${data})]  -> Hello  -> 굵은 글씨로 출력
+						*/-->
+					</td>
+				</tr>
+				<tr>
+					<td><a href="">마이페이지 / </a></td>
+					<td><a href="logout">로그아웃</a></td>
+				</tr>
+			</table>
+		</div>
+	
+	 <br>
+	 <img id="img1" src="/img/짱구1.jpg">
+	<br>
+	<table align="center" class="nav-area">
+			<tr>
+				<td onclick="location.href='index'">HOME</td>
+				<td onclick="location.href='menuForm'">MENU</td>
+				<td onclick="location.href='list'">BOARD</td>
+				<td>INFO</td>
+			</tr>
+		</table>
+	</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
